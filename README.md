@@ -1,4 +1,4 @@
 SnatchAPI
 =========
 
-Official REST-based API for CatacombSnatch
+Official REST-based API for CatacombSnatch based on the OpenInspire Framework made by Verexa
