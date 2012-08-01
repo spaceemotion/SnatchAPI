@@ -47,7 +47,7 @@
 		$split_url = explode("/", trim($url, "/"));
 		$count_url = count($split_url);
 
-		$page_set = false;
+		$request_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD']: "";
 
 		foreach($dispatch as $page){
 			$regex_count = count($page["regex"]);
@@ -77,29 +77,28 @@
 
 						if(method_exists($controller_class, $page["function"])){
 							$controller = new $controller_class;
+							
+							if (strtolower($request_method) == strtolower($page["method"])){ 
+								$content = call_user_func(array($controller, $page["function"]), $params);
 
-							$content = call_user_func(array($controller, $page["function"]), $params);
-
-							if($content != false) echo $content;
-							else echo error(500, "Could Not Render Content!");
-
-							$page_set = true;
+								if($content != false) echo $content;
+								else echo error(500, "Could Not Render Content!");
+							} else {
+								echo error(400, "Request via ". $request_method. "is not possible on this URL");
+							}
 						} else {
 							echo error(500, "Method " . $page["controller"] . "_Controller::" . $page["function"] . "() Does Not Exist!");
-
-							$page_set = true;
 						}
 					} else {
 						echo error(500, "Controller " . $page["controller"] . ".php Does Not Exist!");
-						$page_set = true;
 					}
 
-					break;
+					return;
 				}
 			}
 		}
 
-		if(!$page_set) echo error(404, "Page Does Not Exist!");
+		echo error(404, "Page Does Not Exist!");
 	}
 
 	/* Plugin Getting Stuff*/
