@@ -115,6 +115,12 @@
 		header('Content-Type: application/json;');
 		return json_encode($array);
 	}
+	
+	/* XML Return Encoding */
+	function xml($array){
+		header('Content-Type: application/xml;');
+		return XMLHelper::array2xml($array);
+	}
 
 	/* Error Function */
 	function error($num = 0, $info = ""){
