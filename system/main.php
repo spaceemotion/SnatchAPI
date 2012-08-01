@@ -8,11 +8,9 @@
 	/* Requiring Libraries */
 	require_once SYSTEM_LIB."Controller.php";
 	require_once SYSTEM_LIB."Plugin.php";
-	require_once SYSTEM_LIB."Model.php";
 
 	/* Requiring Functions */
 	require_once SYSTEM_LIB."Dispatch.php";
-
 
 	/* Load Plugins */
 	foreach($config["plugin"] as $plugin){
@@ -112,77 +110,16 @@
 		return false;
 	}
 
-	/* Rendering Views */
-	function render($view, $vars = null){
-		if(file_exists(BASE_DIR . "views/" . $view . ".php")) {
-			ob_start();
-
-			if($vars != null) extract($vars);
-
-			require_once BASE_DIR . "views/" . $view . ".php";
-
-			return ob_get_clean();
-		}
-
-		return false;
-	}
-
-	/* Render With Layout */
-	function render_layout($view, $vars = null, $header = null, $footer = null) {
-		if(file_exists(BASE_DIR . "views/" . $view . ".php")){
-			ob_start();
-
-			if($vars != null) extract($vars);
-
-			if($header != null) require_once BASE_DIR . "views/" . $header . ".php";
-			require_once BASE_DIR . "views/" . $view . ".php";
-			if($footer != null) require_once BASE_DIR . "views/" . $footer . ".php";
-
-			return ob_get_clean();
-		}
-
-		return false;
-	}
-
-	/* Render With Model */
-	function render_model($view, $vars = null, $model = null){
-		if(file_exists(BASE_DIR . "views/" . $view . ".php")){
-			ob_start();
-
-			if($vars != null)
-				extract($vars);
-
-			if($model != null && $model->getHeader() != null)
-				require_once BASE_DIR . "views/" . $model->getHeader() . ".php";
-
-			require_once BASE_DIR . "views/" . $view . ".php";
-
-			if($model != null && $model->getFooter() != null)
-				require_once BASE_DIR . "views/" . $model->getFooter() . ".php";
-
-			return ob_get_clean();
-		}
-
-		return false;
-	}
-
 	/* JSON Return Encoding */
 	function json($array){
 		header('Content-Type: application/json;');
 		return json_encode($array);
 	}
 
-	/* HTML Return Encoding */
-	function html($view = null, $vars = null){
-		header('Content-Type: text/html;');
-		return render($view, $vars);
-	}
-
 	/* Error Function */
 	function error($num = 0, $info = ""){
 		require_once SYSTEM_HELPER.'ErrorcodeHelper.php';
 		global $config;
-
 
 		$string = "<div class=\"error_num\">Error " . $num . "</div><div class=\"error_info\">";
 		$string .= ErrorcodeHelper::getStatusCodeMessage($num). "</div>";
@@ -191,7 +128,7 @@
 			$string .= "<div class=\"error_additional_info\">Additional Info: <code>" . $info . "</code></div>";
 
 		header("Status: " . $num . " " . $error_info);
-
+		
 		return $string;
 	}
 
