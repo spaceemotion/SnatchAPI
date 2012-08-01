@@ -6,11 +6,12 @@
   
   $dispatch = array();
   
-  function dispatch($url = null, $controller = null, $func = null){
+  function dispatch($url = null, $controller = null, $func = null, $method = null){
     global $dispatch;
     if(!$url) return;
     if(!$controller) return;
     if(!$func) $func = "index";
+	if(!$method) $method = "GET";
     
     $regex = array();
     $params = array();
@@ -32,7 +33,8 @@
       "controller" => $controller,
       "function" => $func,
       "regex" => $regex,
-      "params" => $params
+      "params" => $params,
+      "method" => $method
     );
     array_push($dispatch, $info);
   }
