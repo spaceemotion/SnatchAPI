@@ -75,8 +75,8 @@
 
 						if(method_exists($controller_class, $page["function"])){
 							$controller = new $controller_class;
-							
-							if (strtolower($request_method) == strtolower($page["method"])){ 
+
+							if (strtolower($request_method) == strtolower($page["method"])){
 								$content = call_user_func(array($controller, $page["function"]), $params);
 
 								if($content != false) echo $content;
@@ -115,28 +115,42 @@
 		header('Content-Type: application/json;');
 		return json_encode($array);
 	}
-	
+
 	/* XML Return Encoding */
 	function xml($array){
+		if(!loadHelper("XML")) return; // TODO maybe call an error
+
 		header('Content-Type: application/xml;');
 		return XMLHelper::array2xml($array);
 	}
 
 	/* Error Function */
 	function error($num = 0, $info = ""){
-		require_once SYSTEM_HELPER.'ErrorcodeHelper.php';
+		if(!loadHelper("Errorcode")) return; // TODO maybe call an error
+
 		global $config;
 
-		$string = "<div class=\"error_num\">Error " . $num . "</div><div class=\"error_info\">";
-		$string .= ErrorcodeHelper::getStatusCodeMessage($num). "</div>";
+		$error_info = ErrorcodeHelper::getStatusCodeMessage($num);
+		$string = "<div class=\"error_num\">Error $num</div><div class=\"error_info\">$error_info</div>";
 
 		if(!$config["site"]["production"])
-			$string .= "<div class=\"error_additional_info\">Additional Info: <code>" . $info . "</code></div>";
+			$string .= "<div class=\"error_additional_info\">Additional Info: <code>$info</code></div>";
 
-		header("Status: " . $num . " " . $error_info);
-		
+		header("Status: $num $error_info");
+
 		return $string;
 	}
 
+	function loadHelper($helper) {
+		$file = SYSTEM_HELPER.$helper."Helper.php";
+
+		if(file_exists($file)) {
+			include_once $file;
+
+			return true;
+		}
+
+		return false;
+	}
 
 ?>
