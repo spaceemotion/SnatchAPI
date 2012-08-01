@@ -48,32 +48,37 @@
 			$split_url = explode("/", trim($url, "/"));
 			$count_url = count($split_url);
 
-			$request_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD']: "";
+			$request_method = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : "";
 
-			if(count($split_url) > 0) {
+			if($count_url > 0) {
 				$file = USER_CONTROLLER.$split_url[0].".php";
 
 				if(file_exists($file)) {
 					include_once $file;
 
-					$class_name = $split_url[0]."_Controller";
+					$class_name = ucfirst($split_url[0]."_Controller");
 					if(class_exists($class_name)) {
 						$controller = new $class_name();
 
-						if(!isset($split_url[1]) && !empty($split_url)) {
-							$func = $split_url[1];
-							$args = null;
+						$func = "index";
+						$args = null;
 
-							if(count($split_url) > 2) {
+						if($count_url > 1) {
+							$func = $split_url[1];
+
+
+							if($count_url > 2) {
 								$args = array_splice($input, 2);
 							}
-
-							$controller->$func($args);
-						} else {
-							$controller->index();
 						}
 
-						exit;
+						$function = $request_method."_".$func;
+
+						if(method_exists($class_name, $function)) {
+							$controller->$function($args);
+
+							exit;
+						}
 					}
 				}
 			}

@@ -8,7 +8,11 @@
 	 *
      */
 
-	class User_Controller extends Controller { }
+	class User_Controller extends Controller {
+		public function get_index() {
+			echo "hello world";
+		}
+	}
 
 
 ?>
