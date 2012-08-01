@@ -1,4 +1,4 @@
-OpenInspire
-========
+SnatchAPI
+=========
 
-A framework designed to be fast and make prototyping a breeze.
+Official REST-based API for CatacombSnatch
