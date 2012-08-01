@@ -1,8 +1,13 @@
 <?php
-	/*
-	 * SnatchAPI Framework - Site configuration file
+
+    /*
+     * config.php
+     * -------------------------------------------------
+     * SnatchAPI Framework
 	 * Copyright (c) 2012 - Verexa & SpaceEmotion
-	 */
+	 *
+     */
+
 
 	global $config;
 
@@ -12,19 +17,13 @@
 	$config["site"]["title"] = "";
 	$config["site"]["url"] = "";
 
-	/* Plugins Configuration */
-	$config["plugin"]["database"] = array(
-		"active" => false,
-		"dir" => SYSTEM_PLUGIN."database/",
-		"file" => "plugin.php",
-		"class" => "Database",
-		"method" => "load"
-	);
+	$config["site"]["disabled_plugins"] = array();
+
 
 	/*
-	 *  Site Enabled Features
-	 *  DO NOT MODIFY
+	 * Plugins Configuration
+	 * FILLED BY SYSTEM - DO NOT MODIFY
 	 */
-	$config["site"]["enabled_plugin"] = array();
+	$config["site"]["plugins"] = array();
 
 ?>

@@ -1,156 +1,98 @@
 <?php
-	/*
-	 * SnatchAPI Framework - Main system
+
+    /*
+     * main.php
+     * -------------------------------------------------
+     * SnatchAPI Framework
 	 * Copyright (c) 2012 - Verexa & SpaceEmotion
+	 *
+     */
+
+	/*
+	 * Autoload library and helper classes
 	 */
+	function __autoload($class) {
+		$file = SYSTEM_LIB;
+		$helper_str = "Helper";
+		$plugin_str = "Plugin";
 
+		if(substr($class, -strlen($helper_str)) === $helper_str)
+			$file = SYSTEM_HELPER;
+		else if(substr($class, -strlen($plugin_str)) === $plugin_str)
+			$file = SYSTEM_PLUGIN;
 
-	/* Requiring Libraries */
-	require_once SYSTEM_LIB."Controller.php";
-	require_once SYSTEM_LIB."Plugin.php";
-
-	/* Requiring Functions */
-	require_once SYSTEM_LIB."Dispatch.php";
-
-	/* Load Plugins */
-	foreach($config["plugin"] as $plugin){
-		if($plugin["active"]){
-			if(file_exists($plugin["dir"] . $plugin["file"])){
-				require_once $plugin["dir"] . $plugin["file"];
-
-				$plugin_class = $plugin["class"]."_Plugin";
-
-				if(method_exists($plugin_class, $plugin["method"])){
-					$plugin_enabled = array(
-						"class" => $plugin["class"],
-						"instance" => new $plugin_class
-					);
-
-					call_user_func(array($plugin_enabled["instance"], $plugin["method"]), $plugin["dir"]);
-					array_push($config["site"]["enabled_plugin"], $plugin_enabled);
-				}
-			}
-		}
-	}
-
-	/* Run The Site */
-	function run(){
-		global $dispatch;
-		global $config;
-
-		if($config["site"]["production"] == true) ini_set('display_errors','stderr');
-		if($config["site"]["time_zone"] != null) date_default_timezone_set($config["site"]["time_zone"]);
-
-		$url = $_GET['url'];
-		$split_url = explode("/", trim($url, "/"));
-		$count_url = count($split_url);
-
-		$request_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD']: "";
-
-		foreach($dispatch as $page){
-			$regex_count = count($page["regex"]);
-
-			if($regex_count == $count_url){
-				$match_count = 0;
-				$params = array();
-				$param_count = 0;
-
-				for($i = 0; $i < $regex_count; $i++){
-					if($page["regex"][$i] != $split_url[$i] && $page["regex"][$i] != '*') {
-						break;
-					} elseif($page["regex"][$i] == '*'){
-						$params[$page["params"][$param_count]] = $split_url[$i];
-						$match_count++;
-						$param_count++;
-					} else {
-						$match_count++;
-					}
-				}
-
-				if($match_count == $count_url){
-					if(file_exists(BASE_DIR . "controllers/" . $page["controller"] . ".php")){
-						require_once BASE_DIR . "controllers/" . $page["controller"] . ".php";
-
-						$controller_class = $page["controller"] . "_Controller";
-
-						if(method_exists($controller_class, $page["function"])){
-							$controller = new $controller_class;
-
-							if (strtolower($request_method) == strtolower($page["method"])){
-								$content = call_user_func(array($controller, $page["function"]), $params);
-
-								if($content != false) echo $content;
-								else echo error(500, "Could Not Render Content!");
-							} else {
-								echo error(400, "Request via ". $request_method. "is not possible on this URL");
-							}
-						} else {
-							echo error(500, "Method " . $page["controller"] . "_Controller::" . $page["function"] . "() Does Not Exist!");
-						}
-					} else {
-						echo error(500, "Controller " . $page["controller"] . ".php Does Not Exist!");
-					}
-
-					return;
-				}
-			}
-		}
-
-		echo error(404, "Page Does Not Exist!");
-	}
-
-	/* Plugin Getting Stuff*/
-	function &plugin($class){
-		global $config;
-
-		foreach($config["site"]["enabled_plugin"] as $plugin){
-			if($class == $plugin["class"]) return $plugin["instance"];
-		}
-
-		return false;
-	}
-
-	/* JSON Return Encoding */
-	function json($array){
-		header('Content-Type: application/json;');
-		return json_encode($array);
-	}
-
-	/* XML Return Encoding */
-	function xml($array){
-		if(!loadHelper("XML")) return; // TODO maybe call an error
-
-		header('Content-Type: application/xml;');
-		return XMLHelper::array2xml($array);
-	}
-
-	/* Error Function */
-	function error($num = 0, $info = ""){
-		if(!loadHelper("Errorcode")) return; // TODO maybe call an error
-
-		global $config;
-
-		$error_info = ErrorcodeHelper::getStatusCodeMessage($num);
-		$string = "<div class=\"error_num\">Error $num</div><div class=\"error_info\">$error_info</div>";
-
-		if(!$config["site"]["production"])
-			$string .= "<div class=\"error_additional_info\">Additional Info: <code>$info</code></div>";
-
-		header("Status: $num $error_info");
-
-		return $string;
-	}
-
-	function loadHelper($helper) {
-		$file = SYSTEM_HELPER.$helper."Helper.php";
+		$file .= "$class.php";
 
 		if(file_exists($file)) {
 			include_once $file;
 
-			return true;
+			if(class_exists($class)) return;
 		}
 
-		return false;
+		die("<h1>Class not found: $class</h1>");
 	}
+
+	class SnatchAPI {
+		public function run() {
+			global $config;
+
+			if($config["site"]["production"] == true)
+				ini_set('display_errors','stderr');
+
+			if($config["site"]["time_zone"] != null)
+				date_default_timezone_set($config["site"]["time_zone"]);
+
+			$this->loadPlugins();
+
+			$url = $_GET['url'];
+			$split_url = explode("/", trim($url, "/"));
+			$count_url = count($split_url);
+
+			$request_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD']: "";
+
+			if(count($split_url) > 0) {
+				$file = USER_CONTROLLER.$split_url[0].".php";
+
+				if(file_exists($file)) {
+					include_once $file;
+
+					$class_name = $split_url[0]."_Controller";
+					if(class_exists($class_name)) {
+						$controller = new $class_name();
+
+						if(!isset($split_url[1]) && !empty($split_url)) {
+							$func = $split_url[1];
+							$args = null;
+
+							if(count($split_url) > 2) {
+								$args = array_splice($input, 2);
+							}
+
+							$controller->$func($args);
+						} else {
+							$controller->index();
+						}
+
+						exit;
+					}
+				}
+			}
+
+			SiteHelper::write(404);
+		}
+
+		private function loadPlugins() {
+			global $config;
+
+			$plugin_dir = scandir(SYSTEM_PLUGIN);
+
+			foreach($plugin_dir as $dir) {
+				if(substr($dir, 0,1) != ".") {
+					array_push($config["site"]["plugins"], $dir);
+				}
+			}
+		}
+	}
+
 
 ?>

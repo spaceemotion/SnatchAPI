@@ -1,14 +1,17 @@
 <?php
 
-	/*
-	 * SnatchAPI Framework - Plugin class
+    /*
+     * Plugin.php
+     * -------------------------------------------------
+     * SnatchAPI Framework
 	 * Copyright (c) 2012 - Verexa & SpaceEmotion
-	 */
+	 *
+     */
 
 
-	class Plugin{
-
+	abstract class Plugin {
+		abstract public function load();
 	}
 
-	
+
 ?>

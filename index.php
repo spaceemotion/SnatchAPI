@@ -1,26 +1,43 @@
 <?php
 
-	/*
-	 * SnatchAPI Framework - Index Page
+    /*
+     * index.php
+     * -------------------------------------------------
+     * SnatchAPI Framework
 	 * Copyright (c) 2012 - Verexa & SpaceEmotion
+	 *
+     */
+
+
+	/*
+	 * Define Directory Constants
 	 */
 
-	/* Define Directory Constants */
 	define("BASE_DIR", dirname(__FILE__)."/");
 	define("SYSTEM", BASE_DIR."system/");
 	define("SYSTEM_LIB", SYSTEM."libraries/");
-	define("SYSTEM_PLUGIN", SYSTEM."plugins/");
-	define("SYSTEM_HELPER", SYSTEM."helpers/");
+	define("SYSTEM_HELPER", SYSTEM_LIB."helpers/");
+	define("SYSTEM_PLUGIN", SYSTEM_LIB."plugins/");
+
+	define("USER_CONTROLLER", BASE_DIR."controllers/");
+	define("USER_MODEL", BASE_DIR."models/");
+
 
 	/*
-	 *  Require Standard Functions
-	 *  LEAVE IN THIS ORDER FOR FRAMEWORK TO WORK
+	 * Require Standard Functions
+	 * LEAVE IN THIS ORDER FOR FRAMEWORK TO WORK
 	 */
+
 	require_once SYSTEM."config.php";
 	require_once SYSTEM."main.php";
-	require_once SYSTEM."dispatch.php";
 
-	run();
+
+	/*
+	 * Start the whole thing
+	 */
+
+	$app = new SnatchAPI();
+	$app->run();
 
 
 ?>
