@@ -10,6 +10,7 @@
 	define("SYSTEM", BASE_DIR."system/");
 	define("SYSTEM_LIB", SYSTEM."libraries/");
 	define("SYSTEM_PLUGIN", SYSTEM."plugins/");
+	define("SYSTEM_HELPER", SYSTEM."helpers/");
 
 	/*
 	 *  Require Standard Functions
@@ -21,5 +22,5 @@
 
 	run();
 
-	
+
 ?>

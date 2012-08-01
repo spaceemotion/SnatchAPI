@@ -181,42 +181,18 @@
 
 	/* Error Function */
 	function error($num = 0, $info = ""){
+		require_once SYSTEM_HELPER.'ErrorcodeHelper.php';
 		global $config;
 
+
 		$string = "<div class=\"error_num\">Error " . $num . "</div><div class=\"error_info\">";
-		$error_info = "";
-
-		switch($num){
-			/* 4xx Errors */
-			case 400:
-				$error_info = "Bad Request!";
-				break;
-			case 401:
-				$error_info = "Unauthorised!";
-				break;
-			case 403:
-				$error_info = "Forbidden!";
-				break;
-			case 404:
-				$error_info = "Page Not Found!";
-				break;
-
-			/* 5xx Errors */
-			case 500:
-				$error_info = "Internal Server Error!";
-				break;
-			case 503:
-				$error_info = "Service Unavialble!";
-				break;
-		}
-
-		$string .= $error_info . "</div>";
+		$string .= ErrorcodeHelper::getStatusCodeMessage($num). "</div>";
 
 		if(!$config["site"]["production"])
 			$string .= "<div class=\"error_additional_info\">Additional Info: <code>" . $info . "</code></div>";
 
 		header("Status: " . $num . " " . $error_info);
-		
+
 		return $string;
 	}
 
