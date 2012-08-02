@@ -25,6 +25,18 @@
 				}
 			}
 		}
+
+		public static function loadPlugin($name) {
+			global $config;
+
+			if(in_array($name, $config["site"]["plugins"])) {
+				include_once SYSTEM_PLUGIN.$name.'/plugin.php';
+
+				return class_exists($name."_Plugin");
+			}
+
+			return false;
+		}
 	}
 
 ?>

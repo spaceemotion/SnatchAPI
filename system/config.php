@@ -17,7 +17,17 @@
 	$config["site"]["title"] = "";
 	$config["site"]["url"] = "";
 
-	$config["site"]["enabled_plugins"] = array();
+	$config["site"]["enabled_plugins"] = array(
+		"database"
+	);
+
+	/* Database connection */
+	$config["db"] = array(
+		"host"		=> "localhost",
+		"user"		=> "root",
+		"password"	=> "",
+		"name"		=> "catacombsnatch"
+	);
 
 
 	/*

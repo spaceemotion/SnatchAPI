@@ -14,11 +14,20 @@
 	 * @version 1.0
 	 */
 	class SiteHelper {
-		private static $default = "xml";
+		private static $default = "json";
 
-		public static function writeXml($status = 200, $data = array()) {
-			$xml = new SimpleXMLElement("<api />");
-			self::write($status, XmlHelper::array2xml($data, $xml), "application/xml");
+
+		public static function writeDefault($status = 200, $data = array()) {
+			if(self::$default == "xml")
+				self::writeXml ($data);
+			else
+				self::writeJson ($status, $data);
+		}
+
+		public static function writeXml($data = array()) {
+			header("Content-type: application/xml");
+
+			echo XmlHelper::array2xml($data, new SimpleXMLElement("<xml />"));
 		}
 
 		public static function writeJson($status = 200, $data = array()) {

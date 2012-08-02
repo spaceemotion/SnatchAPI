@@ -14,7 +14,7 @@
 		public static function array2xml($arr, &$xml) {
 			foreach ($arr as $key => $value) {
 				if (is_array($value)) {
-		    		if (!is_numeric($key)) {
+					if (!is_numeric($key)) {
 						$sub = $xml->addChild("$key");
 						self::array2xml($value, $sub);
 					} else {
@@ -26,6 +26,6 @@
 			}
 		}
 	}
-	
+
 
 ?>
