@@ -9,15 +9,21 @@
      */
 
 	class Controller {
-		private $model;
-		private $view;
+		protected $model;
+		protected $view;
+
 
 		public function __construct(){ }
 
 		public function loadModel($name){
-			if(file_exists(USER_MODEL . $name . ".php")){
-				require_once USER_MODEL . $name . ".php";
-				$model_class = $name."_Model";
+			$file = USER_MODEL . $name . ".php";
+
+			if(!file_exists($file))
+				$file = SYSTEM_MODEL . $name . ".php";
+
+			if(file_exists($file)){
+				require_once $file;
+				$model_class = ucfirst($name)."_Model";
 
 				if(class_exists($model_class))
 					$this->model = new $model_class;
