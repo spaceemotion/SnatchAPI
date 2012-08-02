@@ -25,7 +25,7 @@
 				<body>
 					<h1>DynDoc - Dynamic Documentation for the SnatchAPI</h1>
 					<p>This page is only an overview of the functions created by the API itself. For more information please <a href="https://github.com/spaceemotion/SnatchAPI">check the wiki</a>.</p>
-					<table border="1" width="50%"><?php
+					<?php
 
 						$controllers = $this->model->getControllerList();
 
@@ -54,7 +54,7 @@
 								}
 
 
-								echo "<tr><th colspan=\"2\">$controller</th></tr>";
+								echo "<table border=\"1\" width=\"50%\"><tr><th colspan=\"2\">$controller</th></tr>";
 
 
 								foreach(array_keys($functions) as $request_method ) {
@@ -65,11 +65,12 @@
 
 									echo "</code></td></tr>";
 								}
+
+								echo "</table><br />";
 							}
 						}
 
-						?>
-					</table>
+					?>
 					<hr />
 					<?= SiteHelper::getSignature(true, "", " - Page created in ".substr((TimeHelper::utime() - $GLOBALS["config"]["site"]["start_time"])*1000, 0, 7)." milliseconds") ?>
 			<?php
