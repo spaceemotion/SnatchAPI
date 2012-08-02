@@ -14,6 +14,17 @@
 	 * @version 1.0
 	 */
 	class SiteHelper {
+		private static $default = "xml";
+
+		public static function writeXml($status = 200, $data = array()) {
+			$xml = new SimpleXMLElement("<api />");
+			self::write($status, XmlHelper::array2xml($data, $xml), "application/xml");
+		}
+
+		public static function writeJson($status = 200, $data = array()) {
+			self::write($status, json_encode($data), "application/json");
+		}
+
 		public static function write($status = 200, $body = '', $content_type = "text/html") {
 			$status_msg = ErrorcodeHelper::getStatusCodeMessage($status);
 			$status_header = "HTTP/1.1 $status $status_msg";
@@ -57,6 +68,11 @@
 			global $config;
 
 			return $config["site"]["title"];
+		}
+
+		public static function setDefaultOutput($default = "xml") {
+			if($default != "xml" && $default != "json" && $default != "custom")
+				self::$default = $default;
 		}
 	}
 

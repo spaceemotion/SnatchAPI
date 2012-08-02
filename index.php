@@ -19,6 +19,9 @@
 	define("SYSTEM_HELPER", SYSTEM_LIB."helpers/");
 	define("SYSTEM_PLUGIN", SYSTEM_LIB."plugins/");
 
+	define("SYSTEM_CONTROLLER", SYSTEM."controllers/");
+	define("SYSTEM_MODEL", SYSTEM."models/");
+
 	define("USER_CONTROLLER", BASE_DIR."controllers/");
 	define("USER_MODEL", BASE_DIR."models/");
 

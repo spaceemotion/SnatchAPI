@@ -10,7 +10,7 @@
 
 	class Controller {
 		private $model;
-
+		private $view;
 
 		public function __construct(){ }
 
@@ -26,6 +26,10 @@
 
 		public function &getModel(){
 			return $this->model;
+		}
+
+		public function &getView() {
+			return $this->view;
 		}
 	}
 

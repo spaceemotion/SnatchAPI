@@ -36,22 +36,33 @@
 		public function run() {
 			global $config;
 
+			// Set environment
 			if($config["site"]["production"] == true)
 				ini_set('display_errors','stderr');
 
 			if($config["site"]["time_zone"] != null)
 				date_default_timezone_set($config["site"]["time_zone"]);
 
-			$this->loadPlugins();
 
+			// Load all plugins into config;
+			PluginHelper::getPlugins();
+
+
+			// Get urls and request method
 			$url = $_GET['url'];
 			$split_url = explode("/", trim($url, "/"));
 			$count_url = count($split_url);
 
 			$request_method = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : "";
 
+			if(isset($_GET["json"])) SiteHelper::setDefaultOutput ("json");
+
+			// Render site
 			if($count_url > 0) {
 				$file = USER_CONTROLLER.$split_url[0].".php";
+
+				if(!file_exists($file))
+					$file = SYSTEM_CONTROLLER.$split_url[0].".php";
 
 				if(file_exists($file)) {
 					include_once $file;
@@ -83,19 +94,9 @@
 				}
 			}
 
+
+			// If nothing happened, display an error
 			SiteHelper::write(404);
-		}
-
-		private function loadPlugins() {
-			global $config;
-
-			$plugin_dir = scandir(SYSTEM_PLUGIN);
-
-			foreach($plugin_dir as $dir) {
-				if(substr($dir, 0,1) != ".") {
-					array_push($config["site"]["plugins"], $dir);
-				}
-			}
 		}
 	}
 

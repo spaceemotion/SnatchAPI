@@ -17,7 +17,7 @@
 	$config["site"]["title"] = "";
 	$config["site"]["url"] = "";
 
-	$config["site"]["disabled_plugins"] = array();
+	$config["site"]["enabled_plugins"] = array();
 
 
 	/*
