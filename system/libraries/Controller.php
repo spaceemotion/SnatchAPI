@@ -31,6 +31,20 @@
 		public function &getView() {
 			return $this->view;
 		}
+
+		public function getApiList() {
+			$methods = get_class_methods(__CLASS__);
+			$exclude = array('__construct', 'getModel', 'loadModel', 'getView', 'getApiList');
+
+			$list = array();
+
+			foreach($methods as $method){
+				if(!in_array($method, $exclude))
+					array_push($list, $method);
+			}
+
+			return $list;
+		}
 	}
 
 
