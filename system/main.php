@@ -39,7 +39,7 @@
 			// Set start time
 			$config["site"]["start_time"] = TimeHelper::utime();
 
-			
+
 			// Set environment
 			if($config["site"]["production"] == true)
 				ini_set('display_errors','stderr');
@@ -59,7 +59,9 @@
 
 			$request_method = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : "";
 
-			if(isset($_GET["json"])) SiteHelper::setDefaultOutput ("json");
+			if(isset($_GET["xml"])) {
+				SiteHelper::setDefaultOutput ("xml");
+			}
 
 			// Render site
 			if($count_url > 0) {

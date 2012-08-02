@@ -14,7 +14,7 @@
 	 * @version 1.0
 	 */
 	class SiteHelper {
-		private static $default = "xml";
+		private static $default = "json";
 
 
 		public static function writeDefault($status = 200, $data = array()) {
@@ -29,7 +29,7 @@
 
 			$xml = new SimpleXMLElement("<api />");
 			XmlHelper::array2xml($data, $xml);
-			
+
 			echo $xml->asXML();
 		}
 
@@ -76,9 +76,9 @@
 			return $config["site"]["title"];
 		}
 
-		public static function setDefaultOutput($default = "xml") {
-			if($default != "xml" && $default != "json" && $default != "custom")
-				self::$default = $default;
+		public static function setDefaultOutput($set = "xml") {
+			if($set == "xml" || $set == "json" || $set == "custom")
+				self::$default = $set;
 		}
 
 		public static function getSignature($html = true, $prefix = '', $suffix = '') {
