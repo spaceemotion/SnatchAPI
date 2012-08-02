@@ -35,22 +35,16 @@
 			if($body != '') {
 				exit($body);
 			} else {
-				if($_SERVER['SERVER_SIGNATURE'] == '')
-					$signature = $_SERVER['SERVER_SOFTWARE'].' Server at '.$_SERVER['SERVER_NAME'].' Port '.$_SERVER['SERVER_PORT'];
-				else
-					$signature = $_SERVER['SERVER_SIGNATURE'];
-
 				$body = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 							<html>
 								<head>
-									<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+									<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 									<title>'.$status.' '.$status_msg.'</title>
 								</head>
 								<body>
 									<h1>'.$status_msg.'</h1>
 									<p>'.$message.'</p>
-									<hr />
-									<address>'.$signature.'</address>
+									<hr />'.(self::getSignature()).'
 								</body>
 							</html>';
 
@@ -73,6 +67,15 @@
 		public static function setDefaultOutput($default = "xml") {
 			if($default != "xml" && $default != "json" && $default != "custom")
 				self::$default = $default;
+		}
+
+		public static function getSignature($html = true, $prefix = '', $suffix = '') {
+			if($_SERVER['SERVER_SIGNATURE'] == '')
+				$signature = $_SERVER['SERVER_SOFTWARE'].' Server at '.$_SERVER['SERVER_NAME'].' Port '.$_SERVER['SERVER_PORT'];
+			else
+				$signature = $_SERVER['SERVER_SIGNATURE'];
+
+			return ($html) ? '<address>'.$prefix.$signature.$suffix.'</address>' : $prefix.$signature.$suffix;
 		}
 	}
 
