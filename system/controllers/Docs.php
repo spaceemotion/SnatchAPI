@@ -58,16 +58,16 @@
 								}
 
 
-								echo "<tr><th colspan=\"2\">$controller</th></tr><pre>";
+								echo "<tr><th colspan=\"2\">$controller</th></tr>";
 
 
 								foreach(array_keys($functions) as $request_method ) {
 									echo "<tr>";
 
-									echo "<td width=\"75\"><code><b>".strtoupper($request_method)."</b></code></td><td>";
+									echo "<td width=\"75\"><code><b>".strtoupper($request_method)."</b></code></td><td><code>";
 									echo implode("<br />", $functions[$request_method]);
 
-									echo "</td></tr>";
+									echo "</code></td></tr>";
 								}
 							}
 						}
