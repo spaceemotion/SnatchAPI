@@ -36,6 +36,10 @@
 		public function run() {
 			global $config;
 
+			// Set start time
+			$config["site"]["start_time"] = TimeHelper::utime();
+
+			
 			// Set environment
 			if($config["site"]["production"] == true)
 				ini_set('display_errors','stderr');

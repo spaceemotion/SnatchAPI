@@ -14,7 +14,7 @@
 	 * @version 1.0
 	 */
 	class SiteHelper {
-		private static $default = "json";
+		private static $default = "xml";
 
 
 		public static function writeDefault($status = 200, $data = array()) {
@@ -27,7 +27,10 @@
 		public static function writeXml($data = array()) {
 			header("Content-type: application/xml");
 
-			echo XmlHelper::array2xml($data, new SimpleXMLElement("<xml />"));
+			$xml = new SimpleXMLElement("<api />");
+			XmlHelper::array2xml($data, $xml);
+			
+			echo $xml->asXML();
 		}
 
 		public static function writeJson($status = 200, $data = array()) {
@@ -85,6 +88,10 @@
 				$signature = $_SERVER['SERVER_SIGNATURE'];
 
 			return ($html) ? '<address>'.$prefix.$signature.$suffix.'</address>' : $prefix.$signature.$suffix;
+		}
+
+		public static function getDefault() {
+			return self::$default;
 		}
 	}
 

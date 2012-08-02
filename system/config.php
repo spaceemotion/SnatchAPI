@@ -35,5 +35,6 @@
 	 * FILLED BY SYSTEM - DO NOT MODIFY
 	 */
 	$config["site"]["plugins"] = array();
+	$config["site"]["start_time"] = 0;
 
 ?>

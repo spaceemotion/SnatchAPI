@@ -9,14 +9,10 @@
      */
 
 	class Docs_Controller extends Controller {
-		private $time;
-
 
 		public function __construct() {
 			parent::__construct();
 			$this->loadModel("Docs");
-
-			$this->time = TimeHelper::utime();
 		}
 
 		public function get_index() {?>
@@ -75,7 +71,7 @@
 						?>
 					</table>
 					<hr />
-					<?= SiteHelper::getSignature(true, "", " - Page created in ".substr((TimeHelper::utime() - $this->time)*1000, 0, 7)." milliseconds") ?>
+					<?= SiteHelper::getSignature(true, "", " - Page created in ".substr((TimeHelper::utime() - $GLOBALS["config"]["site"]["start_time"])*1000, 0, 7)." milliseconds") ?>
 			<?php
 		}
 	}
