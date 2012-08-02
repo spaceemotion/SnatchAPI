@@ -39,7 +39,7 @@
 		}
 
 		public function getApiList() {
-			$methods = get_class_methods(__CLASS__);
+			$methods = get_class_methods($this);
 			$exclude = array('__construct', 'getModel', 'loadModel', 'getView', 'getApiList');
 
 			$list = array();
