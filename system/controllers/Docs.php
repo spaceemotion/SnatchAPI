@@ -24,50 +24,74 @@
 				</head>
 				<body>
 					<h1>DynDoc - Dynamic Documentation for the SnatchAPI</h1>
-					<p>This page is only an overview of the functions created by the API itself. For more information please <a href="https://github.com/spaceemotion/SnatchAPI">check the wiki</a>.</p>
+					<p>This page is only an overview of the functions created by the API itself. For more information please <a href="https://github.com/spaceemotion/SnatchAPI/wiki">check the wiki</a>.</p>
 					<?php
 
 						$controllers = $this->model->getControllerList();
+						$exclude_methods = get_class_methods("Controller");
+
 
 						foreach($controllers as $controller) {
 							include_once USER_CONTROLLER.$controller.'.php';
+
 							$class_name = $controller."_Controller";
 
-							$class = new $class_name();
+							?><table border="2" cellpadding="3">
+								<thead>
+									<tr>
+										<th colspan="2" style="border-style: none;"><?= $controller ?></th>
+									</tr>
+								</thead>
 
-							$class_functions = $class->getApiList();
+								<tbody><?php
+									foreach(get_class_methods($class_name) as $method) {
+										if(!in_array($method, $exclude_methods)) {
+											$expl = explode("_", $method, 2);
 
+											$r = new ReflectionMethod($class_name, $method);
+											$params = $r->getParameters();
 
-							if(!empty($class_functions)) {
-								// Sort functions
-								$functions = array();
+											?>
+											<tr>
+												<td width="75" valign="top">
+													<code><b><?= strtoupper($expl[0]) ?></b></code>
+												</td>
+												<td width=90%"><code> <?
+													echo strtolower($controller)."/";
 
-								foreach($class_functions as $class_function) {
-									if(StringHelper::startWith($class_function, "get_"))
-										$functions["get"][] = ltrim($class_function, "get_");
-									else if(StringHelper::startWith($class_function, "post_"))
-										$functions["post"][] = ltrim($class_function, "post_");
-									else if(StringHelper::startWith($class_function, "put_"))
-										$functions["put"][] = ltrim($class_function, "put_");
-									else if(StringHelper::startWith($class_function, "delete_"))
-										$functions["delete"][] = ltrim($class_function, "delete_");
-								}
+													if($expl[1] != "index") echo $expl[1];
 
+													if(!empty($params)) {
+														$param_count = count($params);
 
-								echo "<table border=\"1\" width=\"50%\"><tr><th colspan=\"2\">$controller</th></tr>";
+														for($p = 0; $p < $param_count; $p++) {
+															$param = $params[$p];
+															$out = $param->getName();
 
+															if($param->isOptional()) {
+																$default = $param->getDefaultValue();
 
-								foreach(array_keys($functions) as $request_method ) {
-									echo "<tr>";
+																if($default === null)
+																	$default = "null";
 
-									echo "<td width=\"75\"><code><b>".strtoupper($request_method)."</b></code></td><td><code>";
-									echo implode("<br />", $functions[$request_method]);
+																$out = "[$out = $default]";
+															}
 
-									echo "</code></td></tr>";
-								}
+															if($p != $param_count-1)
+																$out .= "/";
 
-								echo "</table><br />";
-							}
+															echo $out;
+														}
+
+													}
+												?></code></td>
+											</tr>
+											<?php
+										}
+									} ?>
+
+								</tbody>
+							</table><br /><?php
 						}
 
 					?>
