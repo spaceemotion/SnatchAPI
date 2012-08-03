@@ -50,13 +50,15 @@
 
 											$r = new ReflectionMethod($class_name, $method);
 											$params = $r->getParameters();
+											
+											$request_method = strtoupper($expl[0]);
 
 											?>
 											<tr>
-												<td width="70" valign="top">
-													<code><b><?= strtoupper($expl[0]) ?></b></code>
+												<td width="70" valign="top" align="center" style="color: #fff; background-color: #<?= StringHelper::stringToColorCode($request_method) ?>">
+													<code><?= $request_method ?></code>
 												</td>
-												<td width=90%"><code> <?
+												<td width="90%"><code> <?
 													echo strtolower($controller)."/";
 
 													if($expl[1] != "index") echo "{$expl[1]}/";
@@ -76,7 +78,7 @@
 
 																$out = "[$out = $default]";
 															} else {
-																$out = "<u>$out</u>";
+																$out = "&lt;$out&gt;";
 															}
 
 															if($p != $param_count-1)
@@ -101,6 +103,7 @@
 					<?= SiteHelper::getSignature(true, "", " - Page created in ".substr((TimeHelper::utime() - $GLOBALS["config"]["site"]["start_time"])*1000, 0, 7)." milliseconds") ?>
 			<?php
 		}
+		
 	}
 
 

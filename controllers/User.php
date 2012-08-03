@@ -9,26 +9,39 @@
      */
 
 	class User_Controller extends Controller {
-		public function get_index($id = null) {
+		private $db;
+		
+		
+		public function __construct() {
 			if(PluginHelper::loadPlugin("database")) {
-				$db_plugin = new Database_Plugin();
-
-				if($id != null) {
-					$sth = $db_plugin->prepare("SELECT username FROM users WHERE id=:id");
-					$sth->bindValue(":id", $id, PDO::PARAM_INT);
-				} else {
-					$sth = $db_plugin->prepare("SELECT username FROM users");
-				}
-
-				$sth->execute();
-				$sth->setFetchMode(PDO::FETCH_ASSOC);
-
-				SiteHelper::writeDefault(200, $sth->fetchAll());
+				$this->db = new Database_Plugin();
+			} else {
+				echo SiteHelper::write(500);
 			}
 		}
+		
+		public function get_index($id = null) {
+			if($id != null) {
+				$sth = $this->db->prepare("SELECT user_id,username FROM users WHERE user_id=:id");
+				$sth->bindValue(":id", $id);
+			} else {
+				$sth = $this->db->prepare("SELECT user_id,username FROM users");
+			}
 
-		public function get_view($id) {
+			$sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC);
+
+			SiteHelper::writeDefault(200, $sth->fetchAll());
+		}
+
+		public function get_maps($user_id) {
+			$sth = $this->db->prepare("SELECT name,description,views,downloads FROM map_maps WHERE user_id=:id");
+			$sth->bindValue(":id", $id);
 			
+			$sth->execute();
+			$sth->setFetchMode(PDO::FETCH_ASSOC);
+
+			SiteHelper::writeDefault(200, $sth->fetchAll());
 		}
 	}
 

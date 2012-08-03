@@ -25,6 +25,14 @@
 
 			return (substr($haystack, -$length) === $needle);
 		}
+		
+		public static function stringToColorCode($str) {
+			$code = dechex(crc32($str));
+			$code = substr($code, 0, 6);
+			
+			return $code;
+		}
+
 	}
 
 ?>
