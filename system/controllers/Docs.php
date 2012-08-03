@@ -53,13 +53,13 @@
 
 											?>
 											<tr>
-												<td width="75" valign="top">
+												<td width="70" valign="top">
 													<code><b><?= strtoupper($expl[0]) ?></b></code>
 												</td>
 												<td width=90%"><code> <?
 													echo strtolower($controller)."/";
 
-													if($expl[1] != "index") echo $expl[1];
+													if($expl[1] != "index") echo "{$expl[1]}/";
 
 													if(!empty($params)) {
 														$param_count = count($params);
@@ -75,12 +75,14 @@
 																	$default = "null";
 
 																$out = "[$out = $default]";
+															} else {
+																$out = "<u>$out</u>";
 															}
 
 															if($p != $param_count-1)
 																$out .= "/";
 
-															echo $out;
+															echo "<em>$out</em>";
 														}
 
 													}

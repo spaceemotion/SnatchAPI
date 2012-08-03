@@ -78,21 +78,27 @@
 						$controller = new $class_name();
 
 						$func = "index";
-						$args = null;
+						$args = array();
 
 						if($count_url > 1) {
 							$func = $split_url[1];
 
-
 							if($count_url > 2) {
-								$args = array_splice($input, 2);
+								$args = array_splice($split_url, 1);
 							}
 						}
 
 						$function = $request_method."_".$func;
 
 						if(method_exists($class_name, $function)) {
-							$controller->$function($args);
+							if($count_url > 1) {
+								$r = new ReflectionMethod($controller, $function);
+
+								if(count($args) < count($r->getParameters()))
+									exit(SiteHelper::write(400));
+							}
+
+							call_user_func_array(array($controller, $function), $args);
 
 							exit;
 						}

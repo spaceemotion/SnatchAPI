@@ -26,6 +26,10 @@
 				SiteHelper::writeDefault(200, $sth->fetchAll());
 			}
 		}
+
+		public function get_view($id) {
+			
+		}
 	}
 
 
