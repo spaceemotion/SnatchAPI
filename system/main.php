@@ -94,7 +94,7 @@
 							if($count_url > 1) {
 								$r = new ReflectionMethod($controller, $function);
 
-								if(count($args) < count($r->getParameters()))
+								if(count($args) < $r->getNumberOfRequiredParameters())
 									exit(SiteHelper::write(400));
 							}
 
